@@ -18,7 +18,7 @@ fn main() {
     build.define("SQLITE_CORE", None);
     build.define("SQLITE_API_VAR", None);
 
-    // sqlean by some PCRE2 headers
+    // sqlean PCRE2 headers
     build.define("HAVE_CONFIG_H", None); 
     build.define("PCRE2_CODE_UNIT_WIDTH", "8");
 
