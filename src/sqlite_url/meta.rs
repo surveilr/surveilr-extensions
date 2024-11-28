@@ -40,7 +40,7 @@ mod tests {
     fn test_url_version() {
         let conn = setup_connection();
         let result: String = conn.query_row("SELECT url_version()", [], |row| row.get(0)).unwrap();
-        assert_eq!(result, "0.1.0");
+        assert_eq!(result, "0.1.1");
     }
 
     #[test]
