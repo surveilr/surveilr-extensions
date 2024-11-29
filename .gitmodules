@@ -4,3 +4,6 @@
 [submodule "sqlite3/ext/sqlite-url"]
 	path = sqlite3/ext/sqlite-url
 	url = https://github.com/asg017/sqlite-url.git
+[submodule "sqlite3/ext/sqlite-lines"]
+	path = sqlite3/ext/sqlite-lines
+	url = https://github.com/asg017/sqlite-lines.git

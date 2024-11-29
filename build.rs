@@ -12,6 +12,8 @@ fn main() {
 
     // add subdirs for header files
     find_header_dirs(&src_dir, &mut build);
+    // header files for sqlite-lines
+    build.include("sqlite3/ext/sqlite-lines");
 
     // suppress multiple sqlite3_api definitions in the C files
     // (dont really know the implication of these two macros, chatgpt'd it)
@@ -22,7 +24,13 @@ fn main() {
     build.define("HAVE_CONFIG_H", None); 
     build.define("PCRE2_CODE_UNIT_WIDTH", "8");
 
+    build
+    .define("SQLITE_LINES_VERSION", "\"v0.1.0\"")
+    .define("SQLITE_LINES_DATE", "\"2024-11-28T11:36:54Z\"")
+    .define("SQLITE_LINES_SOURCE", "\"19cf842b1a5f44a9c23ad0d396d167f004c6eb7f\"");
+
     find_c_files(&src_dir, &mut build);
+    build.file("sqlite3/ext/sqlite-lines/sqlite-lines.c");
 
     build.compile("sqlite3ext");
 
