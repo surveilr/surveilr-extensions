@@ -12,8 +12,12 @@ fn main() {
 
     // add subdirs for header files
     find_header_dirs(&src_dir, &mut build);
-    // header files for sqlite-lines
-    build.include("sqlite3/ext/sqlite-lines");
+
+    if cfg!(target_os = "windows") {
+        println!("cargo:warning=Excluding sqlite-lines on Windows");
+    } else {
+        build.include("sqlite3/ext/sqlite-lines");
+    }
 
     // suppress multiple sqlite3_api definitions in the C files
     // (dont really know the implication of these two macros, chatgpt'd it)
@@ -21,16 +25,31 @@ fn main() {
     build.define("SQLITE_API_VAR", None);
 
     // sqlean PCRE2 headers
-    build.define("HAVE_CONFIG_H", None); 
+    build.define("HAVE_CONFIG_H", None);
     build.define("PCRE2_CODE_UNIT_WIDTH", "8");
+    build.define("PCRE2_STATIC", None);
 
     build
-    .define("SQLITE_LINES_VERSION", "\"v0.1.0\"")
-    .define("SQLITE_LINES_DATE", "\"2024-11-28T11:36:54Z\"")
-    .define("SQLITE_LINES_SOURCE", "\"19cf842b1a5f44a9c23ad0d396d167f004c6eb7f\"");
+        .define("SQLITE_LINES_VERSION", "\"v0.1.0\"")
+        .define("SQLITE_LINES_DATE", "\"2024-11-28T11:36:54Z\"")
+        .define(
+            "SQLITE_LINES_SOURCE",
+            "\"19cf842b1a5f44a9c23ad0d396d167f004c6eb7f\"",
+        );
+
+    // handle BYTE_ORDER definition for Windows
+    if cfg!(target_os = "windows") {
+        build.define("LITTLE_ENDIAN", Some("1234"));
+        build.define("BIG_ENDIAN", Some("4321"));
+        build.define("BYTE_ORDER", Some("LITTLE_ENDIAN"));
+    }
 
     find_c_files(&src_dir, &mut build);
-    build.file("sqlite3/ext/sqlite-lines/sqlite-lines.c");
+    if cfg!(target_os = "windows") {
+        println!("cargo:warning=Excluding sqlite-lines on Windows");
+    } else {
+        build.file("sqlite3/ext/sqlite-lines/sqlite-lines.c");
+    }
 
     build.compile("sqlite3ext");
 
@@ -65,7 +84,12 @@ fn find_header_dirs(dir: &Path, build: &mut cc::Build) {
 }
 
 fn contains_header_files(dir: &Path) -> bool {
-    fs::read_dir(dir)
-        .unwrap()
-        .any(|entry| entry.unwrap().path().extension().and_then(|ext| ext.to_str()) == Some("h"))
+    fs::read_dir(dir).unwrap().any(|entry| {
+        entry
+            .unwrap()
+            .path()
+            .extension()
+            .and_then(|ext| ext.to_str())
+            == Some("h")
+    })
 }
