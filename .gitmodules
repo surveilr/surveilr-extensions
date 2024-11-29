@@ -1,6 +1,7 @@
 [submodule "sqlite3/ext/sqlean"]
 	path = sqlite3/ext/sqlean
-	url = https://github.com/nalgeon/sqlean.git
+	url = https://github.com/surveilr/sqlean.git
+	branch = main
 [submodule "sqlite3/ext/sqlite-url"]
 	path = sqlite3/ext/sqlite-url
 	url = https://github.com/asg017/sqlite-url.git
