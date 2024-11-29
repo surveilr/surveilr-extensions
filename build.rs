@@ -28,7 +28,12 @@ fn main() {
     build.define("HAVE_CONFIG_H", None);
     build.define("PCRE2_CODE_UNIT_WIDTH", "8");
     build.define("PCRE2_STATIC", None);
+    
+    build.define("LINK_SIZE", "2");
+    build.define("SUPPORT_UNICODE", None); 
 
+
+    // sqlite-url variables
     build
         .define("SQLITE_LINES_VERSION", "\"v0.1.0\"")
         .define("SQLITE_LINES_DATE", "\"2024-11-28T11:36:54Z\"")
